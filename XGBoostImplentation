@@ -1,0 +1,33 @@
+import pandas as pd
+import numpy as np
+from sklearn import preprocessing
+from xgboost import XGBClassifier
+from matplotlib import pyplot
+
+
+rawtable = pd.read_csv('/Users/matttucker/Desktop/NFLCSV.csv')
+outcomes = pd.read_csv('/Users/matttucker/Desktop/NFLCSVOutcomesVector.csv')
+
+outcomes = np.ravel(outcomes)
+
+x = rawtable.values #returns a numpy array
+
+min_max_scaler = preprocessing.MinMaxScaler()
+
+x_scaled = min_max_scaler.fit_transform(x)
+
+df = pd.DataFrame(x_scaled)
+
+
+model = XGBClassifier()
+model.fit(df, outcomes)
+
+
+print(model.feature_importances_)
+# plot
+pyplot.bar(range(len(model.feature_importances_)), model.feature_importances_)
+pyplot.title('Feature')
+pyplot.show()
+
+
+
